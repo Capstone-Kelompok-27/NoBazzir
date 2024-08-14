@@ -1,4 +1,4 @@
-# Information - Dashboard OSKMITB and ITB-X
+# CAPSTONE_27
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
