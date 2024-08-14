@@ -10,7 +10,7 @@ This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3
    $ git clone https://github.com/Capstone-Kelompok-27/Capstone_27.git
    ```
 
-2. Change the current directory to `oskm-itb-x-dashboard`
+2. Change the current directory to `Capstone_27`
 
    ```sh
    cd Capstone_27
