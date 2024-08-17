@@ -7,13 +7,13 @@ This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3
 1. Clone this repository
 
    ```sh
-   $ git clone https://github.com/Capstone-Kelompok-27/Capstone_27.git
+   cd https://github.com/Capstone-Kelompok-27/NoBazzir.git
    ```
 
 2. Change the current directory to `Capstone_27`
 
    ```sh
-   cd Capstone_27
+   cd NoBazzir
    ```
 
 3. Make a new .env file (liat grup) and delete .env.example
