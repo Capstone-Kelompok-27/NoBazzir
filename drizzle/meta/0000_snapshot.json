@@ -1,143 +1,64 @@
 {
-  "id": "1c529983-08c2-4be3-935d-ce7b4f425c1e",
+  "id": "a69045a4-b660-4774-b2a9-824a7a6cab58",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
-    "public.Capstone_27_account": {
-      "name": "Capstone_27_account",
+    "public.NoBazir_customer": {
+      "name": "NoBazir_customer",
       "schema": "",
       "columns": {
-        "user_id": {
-          "name": "user_id",
+        "customerId": {
+          "name": "customerId",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "type": {
-          "name": "type",
+        "location": {
+          "name": "location",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "provider": {
-          "name": "provider",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "provider_account_id": {
-          "name": "provider_account_id",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "refresh_token": {
-          "name": "refresh_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "access_token": {
-          "name": "access_token",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "expires_at": {
-          "name": "expires_at",
+        "coin": {
+          "name": "coin",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": 0
         },
-        "token_type": {
-          "name": "token_type",
-          "type": "varchar(255)",
+        "bazirPay": {
+          "name": "bazirPay",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": 0
         },
-        "scope": {
-          "name": "scope",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "id_token": {
-          "name": "id_token",
+        "profilePictureUrl": {
+          "name": "profilePictureUrl",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "session_state": {
-          "name": "session_state",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "account_user_id_idx": {
-          "name": "account_user_id_idx",
-          "columns": [
-            "user_id"
-          ],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {
-        "Capstone_27_account_user_id_Capstone_27_user_id_fk": {
-          "name": "Capstone_27_account_user_id_Capstone_27_user_id_fk",
-          "tableFrom": "Capstone_27_account",
-          "tableTo": "Capstone_27_user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "Capstone_27_account_provider_provider_account_id_pk": {
-          "name": "Capstone_27_account_provider_provider_account_id_pk",
-          "columns": [
-            "provider",
-            "provider_account_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {}
-    },
-    "public.Capstone_27_post": {
-      "name": "Capstone_27_post",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_by": {
-          "name": "created_by",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
+          "default": "now()"
         },
         "updated_at": {
           "name": "updated_at",
@@ -147,31 +68,59 @@
         }
       },
       "indexes": {
-        "created_by_idx": {
-          "name": "created_by_idx",
+        "customer_id_idx": {
+          "name": "customer_id_idx",
           "columns": [
-            "created_by"
+            "customerId"
           ],
           "isUnique": false
         },
-        "name_idx": {
-          "name": "name_idx",
+        "customer_user_id_idx": {
+          "name": "customer_user_id_idx",
           "columns": [
-            "name"
+            "userId"
+          ],
+          "isUnique": false
+        },
+        "customer_username_idx": {
+          "name": "customer_username_idx",
+          "columns": [
+            "username"
+          ],
+          "isUnique": false
+        },
+        "customer_location_idx": {
+          "name": "customer_location_idx",
+          "columns": [
+            "location"
+          ],
+          "isUnique": false
+        },
+        "customer_created_at_idx": {
+          "name": "customer_created_at_idx",
+          "columns": [
+            "createdAt"
+          ],
+          "isUnique": false
+        },
+        "customer_updated_at_idx": {
+          "name": "customer_updated_at_idx",
+          "columns": [
+            "updated_at"
           ],
           "isUnique": false
         }
       },
       "foreignKeys": {
-        "Capstone_27_post_created_by_Capstone_27_user_id_fk": {
-          "name": "Capstone_27_post_created_by_Capstone_27_user_id_fk",
-          "tableFrom": "Capstone_27_post",
-          "tableTo": "Capstone_27_user",
+        "NoBazir_customer_userId_NoBazir_user_userId_fk": {
+          "name": "NoBazir_customer_userId_NoBazir_user_userId_fk",
+          "tableFrom": "NoBazir_customer",
+          "tableTo": "NoBazir_user",
           "columnsFrom": [
-            "created_by"
+            "userId"
           ],
           "columnsTo": [
-            "id"
+            "userId"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -180,48 +129,121 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.Capstone_27_session": {
-      "name": "Capstone_27_session",
+    "public.NoBazir_merchant": {
+      "name": "NoBazir_merchant",
       "schema": "",
       "columns": {
-        "session_token": {
-          "name": "session_token",
-          "type": "varchar(255)",
+        "merchantId": {
+          "name": "merchantId",
+          "type": "uuid",
           "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "merchantName": {
+          "name": "merchantName",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "expires": {
-          "name": "expires",
+        "location": {
+          "name": "location",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "merchantType": {
+          "name": "merchantType",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phoneNumber": {
+          "name": "phoneNumber",
+          "type": "varchar(13)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "socialMedia": {
+          "name": "socialMedia",
+          "type": "varchar(2048)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
-        "session_user_id_idx": {
-          "name": "session_user_id_idx",
+        "merchant_id_idx": {
+          "name": "merchant_id_idx",
           "columns": [
-            "user_id"
+            "merchantId"
+          ],
+          "isUnique": false
+        },
+        "merchant_user_id_idx": {
+          "name": "merchant_user_id_idx",
+          "columns": [
+            "userId"
+          ],
+          "isUnique": false
+        },
+        "merchant_name_idx": {
+          "name": "merchant_name_idx",
+          "columns": [
+            "merchantName"
+          ],
+          "isUnique": false
+        },
+        "merchant_location_idx": {
+          "name": "merchant_location_idx",
+          "columns": [
+            "location"
+          ],
+          "isUnique": false
+        },
+        "merchant_created_at_idx": {
+          "name": "merchant_created_at_idx",
+          "columns": [
+            "createdAt"
+          ],
+          "isUnique": false
+        },
+        "merchant_updated_at_idx": {
+          "name": "merchant_updated_at_idx",
+          "columns": [
+            "updated_at"
           ],
           "isUnique": false
         }
       },
       "foreignKeys": {
-        "Capstone_27_session_user_id_Capstone_27_user_id_fk": {
-          "name": "Capstone_27_session_user_id_Capstone_27_user_id_fk",
-          "tableFrom": "Capstone_27_session",
-          "tableTo": "Capstone_27_user",
+        "NoBazir_merchant_userId_NoBazir_user_userId_fk": {
+          "name": "NoBazir_merchant_userId_NoBazir_user_userId_fk",
+          "tableFrom": "NoBazir_merchant",
+          "tableTo": "NoBazir_user",
           "columnsFrom": [
-            "user_id"
+            "userId"
           ],
           "columnsTo": [
-            "id"
+            "userId"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -230,82 +252,412 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.Capstone_27_user": {
-      "name": "Capstone_27_user",
+    "public.NoBazir_post": {
+      "name": "NoBazir_post",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(255)",
+        "postId": {
+          "name": "postId",
+          "type": "uuid",
           "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
           "notNull": true
         },
-        "name": {
-          "name": "name",
+        "postTitle": {
+          "name": "postTitle",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "postPictureUrl": {
+          "name": "postPictureUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "postContent": {
+          "name": "postContent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "postTag": {
+          "name": "postTag",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
+        "likeCount": {
+          "name": "likeCount",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": 0
         },
-        "email_verified": {
-          "name": "email_verified",
+        "userIdLikeList": {
+          "name": "userIdLikeList",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
-          "default": "CURRENT_TIMESTAMP"
+          "notNull": true,
+          "default": "now()"
         },
-        "image": {
-          "name": "image",
-          "type": "varchar(255)",
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
+      "indexes": {
+        "post_id_idx": {
+          "name": "post_id_idx",
+          "columns": [
+            "postId"
+          ],
+          "isUnique": false
+        },
+        "post_user_id_idx": {
+          "name": "post_user_id_idx",
+          "columns": [
+            "userId"
+          ],
+          "isUnique": false
+        },
+        "post_title_idx": {
+          "name": "post_title_idx",
+          "columns": [
+            "postTitle"
+          ],
+          "isUnique": false
+        },
+        "post_tag_idx": {
+          "name": "post_tag_idx",
+          "columns": [
+            "postTag"
+          ],
+          "isUnique": false
+        },
+        "post_like_count_idx": {
+          "name": "post_like_count_idx",
+          "columns": [
+            "likeCount"
+          ],
+          "isUnique": false
+        },
+        "post_user_id_like_list": {
+          "name": "post_user_id_like_list",
+          "columns": [
+            "userIdLikeList"
+          ],
+          "isUnique": false
+        },
+        "post_created_at_idx": {
+          "name": "post_created_at_idx",
+          "columns": [
+            "createdAt"
+          ],
+          "isUnique": false
+        },
+        "post_updated_at_idx": {
+          "name": "post_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "NoBazir_post_userId_NoBazir_user_userId_fk": {
+          "name": "NoBazir_post_userId_NoBazir_user_userId_fk",
+          "tableFrom": "NoBazir_post",
+          "tableTo": "NoBazir_user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "userId"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.Capstone_27_verification_token": {
-      "name": "Capstone_27_verification_token",
+    "public.NoBazir_product": {
+      "name": "NoBazir_product",
       "schema": "",
       "columns": {
-        "identifier": {
-          "name": "identifier",
+        "productId": {
+          "name": "productId",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "merchantId": {
+          "name": "merchantId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "productName": {
+          "name": "productName",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "token": {
-          "name": "token",
+        "productType": {
+          "name": "productType",
           "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "expires": {
-          "name": "expires",
+        "expireDate": {
+          "name": "expireDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stock": {
+          "name": "stock",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "totalCalorie": {
+          "name": "totalCalorie",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "likeCount": {
+          "name": "likeCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "customerIdLikeList": {
+          "name": "customerIdLikeList",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profilePictureUrl": {
+          "name": "profilePictureUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "Capstone_27_verification_token_identifier_token_pk": {
-          "name": "Capstone_27_verification_token_identifier_token_pk",
+      "indexes": {
+        "product_id_idx": {
+          "name": "product_id_idx",
           "columns": [
-            "identifier",
-            "token"
+            "productId"
+          ],
+          "isUnique": false
+        },
+        "product_merchant_id_idx": {
+          "name": "product_merchant_id_idx",
+          "columns": [
+            "merchantId"
+          ],
+          "isUnique": false
+        },
+        "product_name_idx": {
+          "name": "product_name_idx",
+          "columns": [
+            "productName"
+          ],
+          "isUnique": false
+        },
+        "product_type_idx": {
+          "name": "product_type_idx",
+          "columns": [
+            "productType"
+          ],
+          "isUnique": false
+        },
+        "price_idx": {
+          "name": "price_idx",
+          "columns": [
+            "price"
+          ],
+          "isUnique": false
+        },
+        "expire_date_idx": {
+          "name": "expire_date_idx",
+          "columns": [
+            "expireDate"
+          ],
+          "isUnique": false
+        },
+        "product_like_count_idx": {
+          "name": "product_like_count_idx",
+          "columns": [
+            "likeCount"
+          ],
+          "isUnique": false
+        },
+        "product_customer_id_like_list_idx": {
+          "name": "product_customer_id_like_list_idx",
+          "columns": [
+            "customerIdLikeList"
+          ],
+          "isUnique": false
+        },
+        "product_created_at_idx": {
+          "name": "product_created_at_idx",
+          "columns": [
+            "createdAt"
+          ],
+          "isUnique": false
+        },
+        "product_updated_at_idx": {
+          "name": "product_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "NoBazir_product_merchantId_NoBazir_merchant_merchantId_fk": {
+          "name": "NoBazir_product_merchantId_NoBazir_merchant_merchantId_fk",
+          "tableFrom": "NoBazir_product",
+          "tableTo": "NoBazir_merchant",
+          "columnsFrom": [
+            "merchantId"
+          ],
+          "columnsTo": [
+            "merchantId"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.NoBazir_user": {
+      "name": "NoBazir_user",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(320)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "user_id_idx": {
+          "name": "user_id_idx",
+          "columns": [
+            "userId"
+          ],
+          "isUnique": false
+        },
+        "email_idx": {
+          "name": "email_idx",
+          "columns": [
+            "email"
+          ],
+          "isUnique": false
+        },
+        "role_idx": {
+          "name": "role_idx",
+          "columns": [
+            "role"
+          ],
+          "isUnique": false
+        },
+        "user_created_at_idx": {
+          "name": "user_created_at_idx",
+          "columns": [
+            "createdAt"
+          ],
+          "isUnique": false
+        },
+        "user_updated_at_idx": {
+          "name": "user_updated_at_idx",
+          "columns": [
+            "updated_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "NoBazir_user_email_unique": {
+          "name": "NoBazir_user_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
           ]
         }
-      },
-      "uniqueConstraints": {}
+      }
     }
   },
   "enums": {},

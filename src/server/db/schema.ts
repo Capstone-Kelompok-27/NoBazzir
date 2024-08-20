@@ -1,15 +1,16 @@
-import { relations, sql } from "drizzle-orm";
+// import { relations, sql } from "drizzle-orm";
 import {
   index,
   integer,
   pgTableCreator,
-  primaryKey,
-  serial,
+  date,
+  real,
   text,
   timestamp,
   varchar,
+  uuid,
 } from "drizzle-orm/pg-core";
-import { type AdapterAccount } from "next-auth/adapters";
+// import { type AdapterAccount } from "next-auth/adapters";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -17,7 +18,174 @@ import { type AdapterAccount } from "next-auth/adapters";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator((name) => `Capstone_27_${name}`);
+
+export const createTable = pgTableCreator((name) => `NoBazir_${name}`);
+
+export const userTable = createTable(
+  "user",
+  {
+    userId: uuid("userId").primaryKey().defaultRandom(),
+    email: varchar("email", { length: 320 }).notNull().unique(),
+    role: varchar("role", { enum: ["customer", "merchant", "admin"] }),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+      () => new Date(),
+    ),
+  },
+  (user) => ({
+    userIdIdx: index("user_id_idx").on(user.userId),
+    emailIdx: index("email_idx").on(user.email),
+    roleIdx: index("role_idx").on(user.role),
+    userCreatedAtIdx: index("user_created_at_idx").on(user.createdAt),
+    userUpdatedAtIdx: index("user_updated_at_idx").on(user.updatedAt),
+  }),
+);
+
+export const merchantTable = createTable(
+  "merchant",
+  {
+    merchantId: uuid("merchantId").primaryKey().defaultRandom(),
+    userId: uuid("userId")
+      .references(() => userTable.userId)
+      .notNull(),
+    merchantName: varchar("merchantName", { length: 255 }).notNull(),
+    location: varchar("location", { length: 255 }).notNull(),
+    merchantType: varchar("merchantType", { length: 255 }),
+    phoneNumber: varchar("phoneNumber", { length: 13 }),
+    socialMedia: varchar("socialMedia", { length: 2048 }),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+      () => new Date(),
+    ),
+  },
+  (merchant) => ({
+    merchantIdIdx: index("merchant_id_idx").on(merchant.merchantId),
+    merchantUserIdIdx: index("merchant_user_id_idx").on(merchant.userId),
+    merchantNameIdx: index("merchant_name_idx").on(merchant.merchantName),
+    merchantLocationIdx: index("merchant_location_idx").on(merchant.location),
+    merchantCreatedAtIdx: index("merchant_created_at_idx").on(
+      merchant.createdAt,
+    ),
+    merchantUpdatedAtIdx: index("merchant_updated_at_idx").on(
+      merchant.updatedAt,
+    ),
+  }),
+);
+
+export const productTable = createTable(
+  "product",
+  {
+    productId: uuid("productId").primaryKey().defaultRandom(),
+    merchantId: uuid("merchantId")
+      .references(() => merchantTable.merchantId)
+      .notNull(),
+    productName: varchar("productName", { length: 255 }).notNull(),
+    productType: varchar("productType", { length: 255 }),
+    price: integer("price").notNull(),
+    expireDate: date("expireDate").notNull(),
+    stock: integer("stock").notNull().default(0),
+    totalCalorie: real("totalCalorie"),
+    likeCount: integer("likeCount").notNull().default(0),
+    customerIdLikeList: varchar("customerIdLikeList", { length: 36 }),
+    profilePictureUrl: text("profilePictureUrl"),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+      () => new Date(),
+    ),
+  },
+  (product) => ({
+    productIdIdx: index("product_id_idx").on(product.productId),
+    productMerchantIdIdx: index("product_merchant_id_idx").on(
+      product.merchantId,
+    ),
+    productNameIdx: index("product_name_idx").on(product.productName),
+    productTypeIdx: index("product_type_idx").on(product.productType),
+    priceIdx: index("price_idx").on(product.price),
+    expireDateIdx: index("expire_date_idx").on(product.expireDate),
+    productLikeCountIdx: index("product_like_count_idx").on(product.likeCount),
+    productCustomerIdLikeListIdx: index("product_customer_id_like_list_idx").on(
+      product.customerIdLikeList,
+    ),
+    productCreatedAtIdx: index("product_created_at_idx").on(product.createdAt),
+    productUpdatedAtIdx: index("product_updated_at_idx").on(product.updatedAt),
+  }),
+);
+
+export const customerTable = createTable(
+  "customer",
+  {
+    customerId: uuid("customerId").primaryKey().defaultRandom(),
+    userId: uuid("userId")
+      .references(() => userTable.userId)
+      .notNull(),
+    username: varchar("username", { length: 255 }).notNull(),
+    location: varchar("location", { length: 255 }).notNull(),
+    coin: integer("coin").notNull().default(0),
+    bazirPay: integer("bazirPay").notNull().default(0),
+    profilePictureUrl: text("profilePictureUrl"),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+      () => new Date(),
+    ),
+  },
+  (customer) => ({
+    customerIdIdx: index("customer_id_idx").on(customer.customerId),
+    customerUserIdIdx: index("customer_user_id_idx").on(customer.userId),
+    customerUsernameIdx: index("customer_username_idx").on(customer.username),
+    customerLocationIdx: index("customer_location_idx").on(customer.location),
+    customerCreatedAtIdx: index("customer_created_at_idx").on(
+      customer.createdAt,
+    ),
+    customerUpdatedAtIdx: index("customer_updated_at_idx").on(
+      customer.updatedAt,
+    ),
+  }),
+);
+
+export const postTable = createTable(
+  "post",
+  {
+    postId: uuid("postId").primaryKey().defaultRandom(),
+    userId: uuid("userId")
+      .references(() => userTable.userId)
+      .notNull(),
+    postTitle: varchar("postTitle", { length: 255 }).notNull(),
+    postPictureUrl: text("postPictureUrl"),
+    postContent: text("postContent"),
+    postTag: varchar("postTag", { length: 255 }),
+    likeCount: integer("likeCount").notNull().default(0),
+    userIdLikeList: varchar("userIdLikeList", { length: 36 }),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+      () => new Date(),
+    ),
+  },
+  (post) => ({
+    postIdIdx: index("post_id_idx").on(post.postId),
+    postUserIdIdx: index("post_user_id_idx").on(post.userId),
+    postTitleIdx: index("post_title_idx").on(post.postTitle),
+    postTagIdx: index("post_tag_idx").on(post.postTag),
+    postLikeCountIdx: index("post_like_count_idx").on(post.likeCount),
+    postUserIdLikeListIdx: index("post_user_id_like_list").on(
+      post.userIdLikeList,
+    ),
+    postCreatedAtIdx: index("post_created_at_idx").on(post.createdAt),
+    postUpdatedAtIdx: index("post_updated_at_idx").on(post.updatedAt),
+  }),
+);
+
+// Default Schema
+/**
 
 export const posts = createTable(
   "post",
@@ -128,3 +296,4 @@ export const verificationTokens = createTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
+*/
