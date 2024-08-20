@@ -25,6 +25,7 @@ export const userTable = createTable(
   "user",
   {
     userId: uuid("userId").primaryKey().defaultRandom(),
+    password: varchar("password", { length: 225 }),
     email: varchar("email", { length: 320 }).notNull().unique(),
     role: varchar("role", { enum: ["customer", "merchant", "admin"] }),
     createdAt: timestamp("createdAt", { withTimezone: true })
