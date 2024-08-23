@@ -39,4 +39,39 @@ export const authRouter = createTRPCRouter({
         .returning();
       return newUser;
     }),
+  editUser: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string().uuid(),
+        email: z.string().email().optional(),
+        password: z.string().min(8).optional(),
+        role: z.enum(["customer", "merchant", "admin"]).optional(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const {userId, email, password, role} = input;
+
+      const updateFields: any = {};
+      if (email) updateFields.email = email;
+      if (password) updateFields.password = password; // to-do: nant dihash
+      if (role) updateFields.role = role;
+
+      const updatedUser = await db
+        .update(userTable)
+        .set(updateFields)
+        .where(eq(userTable.userId, userId))
+        .returning();
+      
+      return updatedUser;
+    }),
+  deleteUser: protectedProcedure
+    .input(z.string().uuid())
+    .mutation(async ({ input }) => {
+      const userId = input;
+
+      // Optionally handle dependent data deletion or adjustments here
+      await db.delete(userTable).where(eq(userTable.userId, userId));
+
+      return { success: true };
+    }),
 });
