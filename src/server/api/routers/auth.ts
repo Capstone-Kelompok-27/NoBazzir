@@ -1,4 +1,5 @@
 import { z } from "zod";
+import bcrypt from 'bcrypt';
 
 import {
   createTRPCRouter,
@@ -29,11 +30,12 @@ export const authRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       const { email, password, role } = input;
+      const hashPassword = await bcrypt.hash(password, 10);
       const newUser = await db
         .insert(userTable)
         .values({
           email,
-          password, // Consider hashing the password before storing it
+          password : hashPassword,
           role,
         })
         .returning();
@@ -53,7 +55,10 @@ export const authRouter = createTRPCRouter({
 
       const updateFields: any = {};
       if (email) updateFields.email = email;
-      if (password) updateFields.password = password; // to-do: nant dihash
+      if (password) {
+        const hashPassword = await bcrypt.hash(password, 10);
+        updateFields.password = hashPassword;
+      }
       if (role) updateFields.role = role;
 
       const updatedUser = await db
