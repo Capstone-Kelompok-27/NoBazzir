@@ -1,4 +1,4 @@
-// import { relations, sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   index,
   integer,
@@ -9,8 +9,9 @@ import {
   timestamp,
   varchar,
   uuid,
+  primaryKey,
 } from "drizzle-orm/pg-core";
-// import { type AdapterAccount } from "next-auth/adapters";
+import { type AdapterAccount } from "next-auth/adapters";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -21,12 +22,21 @@ import {
 
 export const createTable = pgTableCreator((name) => `NoBazir_${name}`);
 
-export const userTable = createTable(
-  "user",
+export const userLoginTable = createTable(
+  "userLogin",
   {
-    userId: uuid("userId").primaryKey().defaultRandom(),
-    password: varchar("password", { length: 225 }),
-    email: varchar("email", { length: 320 }).notNull().unique(),
+    id: uuid("id")
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: varchar("name", { length: 255 }),
+    // password: varchar("password", { length: 225 }),
+    email: varchar("email", { length: 255 }).notNull(),
+    emailVerified: timestamp("email_verified", {
+      mode: "date",
+      withTimezone: true,
+    }).default(sql`CURRENT_TIMESTAMP`),
+    image: varchar("image", { length: 255 }),
     role: varchar("role", { enum: ["customer", "merchant", "admin"] }),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .notNull()
@@ -36,7 +46,7 @@ export const userTable = createTable(
     ),
   },
   (user) => ({
-    userIdIdx: index("user_id_idx").on(user.userId),
+    idIdx: index("user_id_idx").on(user.id),
     emailIdx: index("email_idx").on(user.email),
     roleIdx: index("role_idx").on(user.role),
     userCreatedAtIdx: index("user_created_at_idx").on(user.createdAt),
@@ -48,8 +58,8 @@ export const merchantTable = createTable(
   "merchant",
   {
     merchantId: uuid("merchantId").primaryKey().defaultRandom(),
-    userId: uuid("userId")
-      .references(() => userTable.userId)
+    id: uuid("id")
+      .references(() => userLoginTable.id)
       .notNull(),
     merchantName: varchar("merchantName", { length: 255 }).notNull(),
     location: varchar("location", { length: 255 }).notNull(),
@@ -65,7 +75,7 @@ export const merchantTable = createTable(
   },
   (merchant) => ({
     merchantIdIdx: index("merchant_id_idx").on(merchant.merchantId),
-    merchantUserIdIdx: index("merchant_user_id_idx").on(merchant.userId),
+    merchantUserIdIdx: index("merchant_user_id_idx").on(merchant.id),
     merchantNameIdx: index("merchant_name_idx").on(merchant.merchantName),
     merchantLocationIdx: index("merchant_location_idx").on(merchant.location),
     merchantCreatedAtIdx: index("merchant_created_at_idx").on(
@@ -122,8 +132,8 @@ export const customerTable = createTable(
   "customer",
   {
     customerId: uuid("customerId").primaryKey().defaultRandom(),
-    userId: uuid("userId")
-      .references(() => userTable.userId)
+    id: uuid("id")
+      .references(() => userLoginTable.id)
       .notNull(),
     username: varchar("username", { length: 255 }).notNull(),
     location: varchar("location", { length: 255 }).notNull(),
@@ -139,7 +149,7 @@ export const customerTable = createTable(
   },
   (customer) => ({
     customerIdIdx: index("customer_id_idx").on(customer.customerId),
-    customerUserIdIdx: index("customer_user_id_idx").on(customer.userId),
+    customerUserIdIdx: index("customer_user_id_idx").on(customer.id),
     customerUsernameIdx: index("customer_username_idx").on(customer.username),
     customerLocationIdx: index("customer_location_idx").on(customer.location),
     customerCreatedAtIdx: index("customer_created_at_idx").on(
@@ -155,8 +165,8 @@ export const postTable = createTable(
   "post",
   {
     postId: uuid("postId").primaryKey().defaultRandom(),
-    userId: uuid("userId")
-      .references(() => userTable.userId)
+    id: uuid("id")
+      .references(() => userLoginTable.id)
       .notNull(),
     postTitle: varchar("postTitle", { length: 255 }).notNull(),
     postPictureUrl: text("postPictureUrl"),
@@ -173,7 +183,7 @@ export const postTable = createTable(
   },
   (post) => ({
     postIdIdx: index("post_id_idx").on(post.postId),
-    postUserIdIdx: index("post_user_id_idx").on(post.userId),
+    postUserIdIdx: index("post_user_id_idx").on(post.id),
     postTitleIdx: index("post_title_idx").on(post.postTitle),
     postTagIdx: index("post_tag_idx").on(post.postTag),
     postLikeCountIdx: index("post_like_count_idx").on(post.likeCount),
@@ -183,30 +193,6 @@ export const postTable = createTable(
     postCreatedAtIdx: index("post_created_at_idx").on(post.createdAt),
     postUpdatedAtIdx: index("post_updated_at_idx").on(post.updatedAt),
   }),
-);
-
-// Default Schema
-/**
-
-export const posts = createTable(
-  "post",
-  {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdById: varchar("created_by", { length: 255 })
-      .notNull()
-      .references(() => users.id),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date()
-    ),
-  },
-  (example) => ({
-    createdByIdIdx: index("created_by_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
-  })
 );
 
 export const users = createTable("user", {
@@ -297,4 +283,5 @@ export const verificationTokens = createTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
-*/
+
+

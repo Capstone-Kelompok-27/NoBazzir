@@ -1,9 +1,115 @@
 {
-  "id": "a69045a4-b660-4774-b2a9-824a7a6cab58",
+  "id": "ca896067-60b1-45fe-9639-d6a1d98c358b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
+    "public.NoBazir_account": {
+      "name": "NoBazir_account",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_account_id": {
+          "name": "provider_account_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "refresh_token": {
+          "name": "refresh_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "access_token": {
+          "name": "access_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "token_type": {
+          "name": "token_type",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "scope": {
+          "name": "scope",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_token": {
+          "name": "id_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "session_state": {
+          "name": "session_state",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "account_user_id_idx": {
+          "name": "account_user_id_idx",
+          "columns": [
+            "id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "NoBazir_account_id_NoBazir_user_id_fk": {
+          "name": "NoBazir_account_id_NoBazir_user_id_fk",
+          "tableFrom": "NoBazir_account",
+          "tableTo": "NoBazir_user",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "NoBazir_account_provider_provider_account_id_pk": {
+          "name": "NoBazir_account_provider_provider_account_id_pk",
+          "columns": [
+            "provider",
+            "provider_account_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
     "public.NoBazir_customer": {
       "name": "NoBazir_customer",
       "schema": "",
@@ -15,8 +121,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "userId": {
-          "name": "userId",
+        "id": {
+          "name": "id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -78,7 +184,7 @@
         "customer_user_id_idx": {
           "name": "customer_user_id_idx",
           "columns": [
-            "userId"
+            "id"
           ],
           "isUnique": false
         },
@@ -112,15 +218,15 @@
         }
       },
       "foreignKeys": {
-        "NoBazir_customer_userId_NoBazir_user_userId_fk": {
-          "name": "NoBazir_customer_userId_NoBazir_user_userId_fk",
+        "NoBazir_customer_id_NoBazir_userLogin_id_fk": {
+          "name": "NoBazir_customer_id_NoBazir_userLogin_id_fk",
           "tableFrom": "NoBazir_customer",
-          "tableTo": "NoBazir_user",
+          "tableTo": "NoBazir_userLogin",
           "columnsFrom": [
-            "userId"
+            "id"
           ],
           "columnsTo": [
-            "userId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -140,8 +246,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "userId": {
-          "name": "userId",
+        "id": {
+          "name": "id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -201,7 +307,7 @@
         "merchant_user_id_idx": {
           "name": "merchant_user_id_idx",
           "columns": [
-            "userId"
+            "id"
           ],
           "isUnique": false
         },
@@ -235,15 +341,15 @@
         }
       },
       "foreignKeys": {
-        "NoBazir_merchant_userId_NoBazir_user_userId_fk": {
-          "name": "NoBazir_merchant_userId_NoBazir_user_userId_fk",
+        "NoBazir_merchant_id_NoBazir_userLogin_id_fk": {
+          "name": "NoBazir_merchant_id_NoBazir_userLogin_id_fk",
           "tableFrom": "NoBazir_merchant",
-          "tableTo": "NoBazir_user",
+          "tableTo": "NoBazir_userLogin",
           "columnsFrom": [
-            "userId"
+            "id"
           ],
           "columnsTo": [
-            "userId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -263,8 +369,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "userId": {
-          "name": "userId",
+        "id": {
+          "name": "id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -331,7 +437,7 @@
         "post_user_id_idx": {
           "name": "post_user_id_idx",
           "columns": [
-            "userId"
+            "id"
           ],
           "isUnique": false
         },
@@ -379,15 +485,15 @@
         }
       },
       "foreignKeys": {
-        "NoBazir_post_userId_NoBazir_user_userId_fk": {
-          "name": "NoBazir_post_userId_NoBazir_user_userId_fk",
+        "NoBazir_post_id_NoBazir_userLogin_id_fk": {
+          "name": "NoBazir_post_id_NoBazir_userLogin_id_fk",
           "tableFrom": "NoBazir_post",
-          "tableTo": "NoBazir_user",
+          "tableTo": "NoBazir_userLogin",
           "columnsFrom": [
-            "userId"
+            "id"
           ],
           "columnsTo": [
-            "userId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -573,22 +679,90 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.NoBazir_user": {
-      "name": "NoBazir_user",
+    "public.NoBazir_session": {
+      "name": "NoBazir_session",
       "schema": "",
       "columns": {
-        "userId": {
-          "name": "userId",
+        "session_token": {
+          "name": "session_token",
+          "type": "varchar(255)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires": {
+          "name": "expires",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "session_user_id_idx": {
+          "name": "session_user_id_idx",
+          "columns": [
+            "id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "NoBazir_session_id_NoBazir_user_id_fk": {
+          "name": "NoBazir_session_id_NoBazir_user_id_fk",
+          "tableFrom": "NoBazir_session",
+          "tableTo": "NoBazir_user",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.NoBazir_userLogin": {
+      "name": "NoBazir_userLogin",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
         },
         "email": {
           "name": "email",
-          "type": "varchar(320)",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "email_verified": {
+          "name": "email_verified",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "image": {
+          "name": "image",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
         },
         "role": {
           "name": "role",
@@ -614,7 +788,7 @@
         "user_id_idx": {
           "name": "user_id_idx",
           "columns": [
-            "userId"
+            "id"
           ],
           "isUnique": false
         },
@@ -649,15 +823,84 @@
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "NoBazir_user_email_unique": {
-          "name": "NoBazir_user_email_unique",
-          "nullsNotDistinct": false,
+      "uniqueConstraints": {}
+    },
+    "public.NoBazir_user": {
+      "name": "NoBazir_user",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email_verified": {
+          "name": "email_verified",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "image": {
+          "name": "image",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.NoBazir_verification_token": {
+      "name": "NoBazir_verification_token",
+      "schema": "",
+      "columns": {
+        "identifier": {
+          "name": "identifier",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token": {
+          "name": "token",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires": {
+          "name": "expires",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "NoBazir_verification_token_identifier_token_pk": {
+          "name": "NoBazir_verification_token_identifier_token_pk",
           "columns": [
-            "email"
+            "identifier",
+            "token"
           ]
         }
-      }
+      },
+      "uniqueConstraints": {}
     }
   },
   "enums": {},
